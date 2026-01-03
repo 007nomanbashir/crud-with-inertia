@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\Rule;
 
@@ -18,9 +19,12 @@ use Illuminate\Validation\Rule;
 |
 */
 
-Route::get('login', [AuthController::class, 'index'])->name('login');
-Route::post('check', [AuthController::class, 'check']);
-// Route::middleware('auth')->group(function () {
+Route::middleware('guest')->group(function () {
+    Route::get('login', [AuthController::class, 'index'])->name('login');
+    Route::post('check', [AuthController::class, 'check']);
+});
+
+Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Home');
     });
@@ -74,6 +78,7 @@ Route::post('check', [AuthController::class, 'check']);
         return Inertia::render('user/Edit', ['data' => $id]);
     })->name('edit');
     Route::post('logout', function () {
-        dd('logout successfully ' . request('foo'));
-    });
-// });
+        Auth::logout();
+        return redirect('/login');
+    })->name('logout');
+});

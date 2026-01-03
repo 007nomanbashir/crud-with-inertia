@@ -18,5 +18,5 @@ createInertiaApp({
   title: title =>"My-App " + title
 });
 InertiaProgress.init({
-  showSpinner:true,
+  showSpinner:false,
 });
